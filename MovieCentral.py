@@ -29,7 +29,6 @@ else:
 
 if watchmode_id is not None and search_type in ['details', 'sources']:
     # API endpoint
-    # API endpoint
     url = "https://api.watchmode.com/v1/title/{}/{}/?apiKey=SZicWMb0OHWlsXVWF03oMnGctBKy51Ps1IPQbZeh".format(
         watchmode_id, search_type)
 
@@ -41,13 +40,20 @@ if watchmode_id is not None and search_type in ['details', 'sources']:
             # Extracting specific fields from the JSON response
             plot_overview = data.get("plot_overview", "Plot overview not available")
             title = data.get("title", "Title not available")
-            genres = ", ".join([genre['name'] for genre in data.get("genre_name", [])])
+            genres = data.get("genre_names", "Genres not available")
+            releaseDate = data.get("release_date", "Release Date not available")
+            trailer = data.get("trailer", "Trailer not available")
 
-            print(title)
+            print("\n" + title + " Details : ")
             print(plot_overview)
             print(genres)
+            print(releaseDate)
+            print(trailer)
 
-
+        else:
+            for x in data:
+                print(x.get("name", "Source does not exist"))
+                print(x.get("web_url", "URL does not exist"))
 
     else:
         print("Failed to retrieve data, status code: {}".format(response.status_code))
