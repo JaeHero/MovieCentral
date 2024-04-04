@@ -23,11 +23,11 @@ else:
 
 if watchmode_id is not None:
     print(watchmode_id)
-    search_type = input('Would you like to receive details or sources? ')
+    search_type = input('Would you like to receive details, sources, or cast-crew ?\n ')
 else:
     print("Watchmode ID not found")
 
-if watchmode_id is not None and search_type in ['details', 'sources']:
+if watchmode_id is not None and search_type in ['details', 'sources', 'cast-crew']:
     # API endpoint
     url = "https://api.watchmode.com/v1/title/{}/{}/?apiKey=SZicWMb0OHWlsXVWF03oMnGctBKy51Ps1IPQbZeh".format(
         watchmode_id, search_type)
@@ -37,7 +37,6 @@ if watchmode_id is not None and search_type in ['details', 'sources']:
         data = response.json()
 
         if search_type == "details":
-            # Extracting specific fields from the JSON response
             plot_overview = data.get("plot_overview", "Plot overview not available")
             title = data.get("title", "Title not available")
             genres = data.get("genre_names", "Genres not available")
@@ -50,10 +49,21 @@ if watchmode_id is not None and search_type in ['details', 'sources']:
             print(releaseDate)
             print(trailer)
 
-        else:
+        elif search_type == "sources":
             for x in data:
                 print(x.get("name", "Source does not exist"))
                 print(x.get("web_url", "URL does not exist"))
+
+        else:
+
+            for x in data:
+                if(x.get("type") == "Crew"):
+                    continue
+
+                print("Crew member name: " + x.get("full_name", "Crew member name not available"))
+                print(x.get("type", "type not available"))
+                print("Crew member role: " + x.get("role", "Crew member role not available"))
+                print("\n")
 
     else:
         print("Failed to retrieve data, status code: {}".format(response.status_code))
